@@ -1,0 +1,47 @@
+/*
+Een paragraaf binnen deze tweede div moet #eee als achtergrondkleur hebben.
+
+Extra uitdaging:
+
+Wanneer de bezoeker met zijn muis over een paragraaf in deze tweede div heengaan,
+moet deze een achtergrondkleur krijgen van #aa0. 
+Zorg er dan ook voor dat deze paragrafen een handje als muis-cursor krijgen.
+
+*/
+body{
+    font-family: Calibri, Verdana, sans-serif;
+    margin: 3%;
+}
+
+h2{
+    color: blue;
+}
+
+img{
+    width: 40%;
+    height: auto;
+}
+
+.grayed{
+    background-color: lightgray;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.grayed p{
+    background-color: #eee;
+    padding: 20px;
+}
+
+.grayed p:hover{
+    background-color: #aa0;
+    cursor: pointer;
+}
+
+
+
+.centered{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
