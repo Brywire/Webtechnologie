@@ -1,0 +1,23 @@
+body {
+    font-family: Georgia, serif;
+}
+
+h4 {
+    background-color: #d84aa8;
+    color: #ffffff;
+    padding: 7px;
+    margin-bottom: 0;
+}
+
+.persoon {
+    padding: 8px;
+    margin: 0;
+}
+
+/* Lichtpaarse tinten */
+.p1 { background-color: #f1d7f2; }
+.p2 { background-color: #f6e3f7; }
+.p3 { background-color: #f1d7f2; }
+.p4 { background-color: #f6e3f7; }
+.p5 { background-color: #f1d7f2; }
+.p6 { background-color: #f6e3f7; }
