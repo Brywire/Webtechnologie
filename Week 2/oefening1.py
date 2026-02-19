@@ -11,8 +11,10 @@ class Voorraad:
 
     def __init__(self, product_naam, aantal):
         self._product_naam = product_naam
-        self.__aantal = aantal
+        self.__aantal = 0
         self._mutatie_geschiedenis = []
+        self.bijbestellen(aantal)
+        # self._mutatie_geschiedenis.append((Voorraad._current_time(), aantal, "start"))
         print(f"Voorraad aangemaakt voor {self._product_naam}")
 
     def bijbestellen(self, aantal):
@@ -41,3 +43,9 @@ class Voorraad:
                 mutatie_type = "verkocht"
                 aantal = abs(aantal)
             print(f"  {datum}: {aantal} {mutatie_type}")
+
+
+muis_voorraad = Voorraad("Draadloze muis", 50)
+muis_voorraad.bijbestellen(20)
+muis_voorraad.verkoop(15)
+muis_voorraad.toon_mutaties()
