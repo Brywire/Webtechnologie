@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Profiel – StudyFlow{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 500px;">
+
+    <h1 class="mb-4" style="font-size:1.8rem;">Mijn profiel</h1>
+
+    <div class="card-sf p-4 mb-4">
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <div style="width:56px; height:56px; border-radius:50%; background:var(--accent-soft); border:2px solid var(--accent); display:flex; align-items:center; justify-content:center;">
+                <i class="bi bi-person-fill" style="font-size:1.6rem; color:var(--accent);"></i>
+            </div>
+            <div>
+                <div style="font-size:1.1rem; font-weight:600;">{{ current_user.username }}</div>
+                <div style="font-size:0.85rem; color:var(--text-muted);">{{ current_user.email }}</div>
+            </div>
+        </div>
+
+        <hr style="border-color:var(--border); margin: 0 0 1.25rem;">
+
+        <div class="d-flex justify-content-between text-center">
+            <div>
+                <div style="font-size:1.5rem; font-weight:700; color:var(--text-main);">{{ total }}</div>
+                <div style="font-size:0.78rem; color:var(--text-muted);">Totaal</div>
+            </div>
+            <div>
+                <div style="font-size:1.5rem; font-weight:700; color:var(--success);">{{ done }}</div>
+                <div style="font-size:0.78rem; color:var(--text-muted);">Afgerond</div>
+            </div>
+            <div>
+                <div style="font-size:1.5rem; font-weight:700; color:var(--accent);">{{ open_ }}</div>
+                <div style="font-size:0.78rem; color:var(--text-muted);">Open</div>
+            </div>
+        </div>
+    </div>
+
+    <a href="{{ url_for('index') }}" class="btn btn-outline-sf w-100">
+        <i class="bi bi-arrow-left me-1"></i> Terug naar taken
+    </a>
+
+</div>
+{% endblock %}

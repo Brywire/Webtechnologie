@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+{% block title %}Mijn Taken – StudyFlow{% endblock %}
+
+{% block extra_style %}
+/* ── Deadline badge colours ── */
+.badge-urgent   { background: #e05c5c22; color: #e05c5c; border: 1px solid #e05c5c55; }
+.badge-soon     { background: #f5a62322; color: #f5a623; border: 1px solid #f5a62355; }
+.badge-ok       { background: #4ecb8d22; color: #4ecb8d; border: 1px solid #4ecb8d55; }
+.badge-done     { background: #ffffff11; color: var(--text-muted); border: 1px solid var(--border); }
+
+/* ── Task card ── */
+.task-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    transition: border-color 0.2s, transform 0.15s;
+    position: relative;
+}
+.task-card:hover {
+    border-color: #3a3f5a;
+    transform: translateY(-1px);
+}
+.task-card.done {
+    opacity: 0.55;
+}
+.task-card.done .task-title {
+    text-decoration: line-through;
+    color: var(--text-muted);
+}
+.task-priority-bar {
+    position: absolute;
+    left: 0; top: 12px; bottom: 12px;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+}
+.priority-high   { background: var(--danger); }
+.priority-medium { background: var(--warning); }
+.priority-low    { background: var(--success); }
+
+.task-title { font-weight: 600; font-size: 0.975rem; }
+.task-meta  { font-size: 0.78rem; color: var(--text-muted); }
+
+/* ── Checkbox styling ── */
+.task-check {
+    width: 20px; height: 20px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    background: transparent;
+    appearance: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s;
+}
+.task-check:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%230f1117' d='M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z'/%3E%3C/svg%3E");
+    background-size: 12px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* ── Sidebar announcement card ── */
+.announcement-card {
+    background: linear-gradient(135deg, #1a1d27 0%, #21253a 100%);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem;
+}
+.deadline-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+}
+.deadline-item:last-child { border-bottom: none; }
+.deadline-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* ── Stats row ── */
+.stat-pill {
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+.stat-pill span { color: var(--text-main); font-weight: 600; font-size: 1rem; }
+
+/* ── Empty state ── */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-muted);
+}
+.empty-state i { font-size: 3rem; opacity: 0.3; display: block; margin-bottom: 1rem; }
+
+/* ── Filter tabs ── */
+.filter-tab {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    border-radius: 8px;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+.filter-tab:hover, .filter-tab.active {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <!-- Page header -->
+    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+        <div>
+            <h1 class="mb-0" style="font-size:1.8rem;">Mijn Taken</h1>
+            <p class="mb-0" style="color:var(--text-muted); font-size:0.875rem;">
+                Welkom terug, <strong style="color:var(--text-main);">{{ current_user.username }}</strong>
+            </p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- ── Left: task list ── -->
+        <div class="col-lg-8">
+
+            <!-- Stats -->
+            <div class="d-flex gap-2 flex-wrap mb-3">
+                <div class="stat-pill"><span>{{ stats.total }}</span> totaal</div>
+                <div class="stat-pill"><span>{{ stats.done }}</span> afgerond</div>
+                <div class="stat-pill"><span>{{ stats.open }}</span> open</div>
+            </div>
+
+            <!-- Filter tabs -->
+            <div class="d-flex gap-2 mb-3 flex-wrap">
+                <a href="?filter=all"    class="filter-tab {% if filter == 'all' or not filter %}active{% endif %}">Alles</a>
+                <a href="?filter=open"   class="filter-tab {% if filter == 'open' %}active{% endif %}">Open</a>
+                <a href="?filter=done"   class="filter-tab {% if filter == 'done' %}active{% endif %}">Afgerond</a>
+                <a href="?filter=urgent" class="filter-tab {% if filter == 'urgent' %}active{% endif %}">
+                    <i class="bi bi-exclamation-circle me-1"></i>Urgent
+                </a>
+            </div>
+
+            <!-- Task list -->
+            <div class="d-flex flex-column gap-2">
+                {% if tasks %}
+                    {% for task in tasks %}
+                    <div class="task-card {% if task.done %}done{% endif %}">
+                        <div class="task-priority-bar priority-{{ task.priority }}"></div>
+
+                        <div class="d-flex align-items-start gap-3 ps-2">
+                            <!-- Checkbox → POST to toggle done -->
+                            <form method="POST" action="{{ url_for('toggle_task', task_id=task.id) }}" class="mt-1">
+                                <input type="checkbox" class="task-check"
+                                       onchange="this.form.submit()"
+                                       {% if task.done %}checked{% endif %}>
+                            </form>
+
+                            <div class="flex-grow-1">
+                                <div class="task-title">{{ task.title }}</div>
+                                {% if task.description %}
+                                <div class="task-meta mt-1">{{ task.description }}</div>
+                                {% endif %}
+
+                                <div class="d-flex align-items-center gap-2 mt-2 flex-wrap">
+                                    <!-- Deadline badge -->
+                                    {% if task.deadline %}
+                                        {% set days_left = (task.deadline - today).days %}
+                                        {% if task.done %}
+                                        <span class="badge-done badge rounded-pill px-2 py-1" style="font-size:0.73rem;">
+                                            <i class="bi bi-check2 me-1"></i>Afgerond
+                                        </span>
+                                        {% elif days_left < 0 %}
+                                        <span class="badge-urgent badge rounded-pill px-2 py-1" style="font-size:0.73rem;">
+                                            <i class="bi bi-exclamation-triangle me-1"></i>Verlopen
+                                        </span>
+                                        {% elif days_left == 0 %}
+                                        <span class="badge-urgent badge rounded-pill px-2 py-1" style="font-size:0.73rem;">
+                                            <i class="bi bi-alarm me-1"></i>Vandaag!
+                                        </span>
+                                        {% elif days_left <= 3 %}
+                                        <span class="badge-soon badge rounded-pill px-2 py-1" style="font-size:0.73rem;">
+                                            <i class="bi bi-clock me-1"></i>{{ days_left }} dag{{ 'en' if days_left != 1 else '' }}
+                                        </span>
+                                        {% else %}
+                                        <span class="badge-ok badge rounded-pill px-2 py-1" style="font-size:0.73rem;">
+                                            <i class="bi bi-calendar3 me-1"></i>{{ task.deadline.strftime('%d %b') }}
+                                        </span>
+                                        {% endif %}
+                                    {% endif %}
+
+                                    <!-- Vak -->
+                                    {% if task.subject %}
+                                    <span class="task-meta">
+                                        <i class="bi bi-book me-1"></i>{{ task.subject }}
+                                    </span>
+                                    {% endif %}
+
+                                    <!-- Prioriteit label -->
+                                    <span class="task-meta">
+                                        {% if task.priority == 'high' %}
+                                        <i class="bi bi-arrow-up-circle me-1" style="color:var(--danger);"></i>Hoog
+                                        {% elif task.priority == 'medium' %}
+                                        <i class="bi bi-dash-circle me-1" style="color:var(--warning);"></i>Gemiddeld
+                                        {% else %}
+                                        <i class="bi bi-arrow-down-circle me-1" style="color:var(--success);"></i>Laag
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Edit + Delete buttons -->
+                            <div class="d-flex gap-1">
+                                <a href="{{ url_for('edit_task', task_id=task.id) }}" class="btn btn-outline-sf btn-sm" style="padding:0.3rem 0.6rem;">
+                                    <i class="bi bi-pencil" style="font-size:0.8rem;"></i>
+                                </a>
+                                <form method="POST" action="{{ url_for('delete_task', task_id=task.id) }}"
+                                      onsubmit="return confirm('Taak verwijderen?')">
+                                    <button type="submit" class="btn btn-outline-sf btn-sm" style="padding:0.3rem 0.6rem;">
+                                        <i class="bi bi-trash3" style="font-size:0.8rem;"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="empty-state card-sf">
+                    <i class="bi bi-inbox"></i>
+                    <p class="mb-3">Geen taken gevonden.</p>
+                    <a href="{{ url_for('add_task') }}" class="btn btn-accent px-4">
+                        <i class="bi bi-plus-lg me-1"></i> Eerste taak toevoegen
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- ── Right: announcements / upcoming ── -->
+        <div class="col-lg-4">
+            <div class="announcement-card mb-3">
+                <h6 class="mb-3" style="font-family:'DM Serif Display',serif; font-size:1rem; color:var(--accent);">
+                    <i class="bi bi-bell me-2"></i>Aankomende deadlines
+                </h6>
+
+                {% set upcoming = tasks | rejectattr('done') | selectattr('deadline') | sort(attribute='deadline') | list %}
+                {% if upcoming %}
+                    {% for task in upcoming[:5] %}
+                    {% set days_left = (task.deadline - today).days %}
+                    <div class="deadline-item">
+                        <div class="deadline-dot"
+                             style="background: {% if days_left <= 0 %}var(--danger){% elif days_left <= 3 %}var(--warning){% else %}var(--success){% endif %}">
+                        </div>
+                        <div class="flex-grow-1">
+                            <div style="font-weight:500; font-size:0.85rem;">{{ task.title }}</div>
+                            <div style="font-size:0.75rem; color:var(--text-muted);">
+                                {% if days_left < 0 %}
+                                    Verlopen
+                                {% elif days_left == 0 %}
+                                    Vandaag
+                                {% elif days_left == 1 %}
+                                    Morgen
+                                {% else %}
+                                    Over {{ days_left }} dagen
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div style="font-size:0.75rem; color:var(--text-muted);">
+                            {{ task.deadline.strftime('%d %b') }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">
+                    Geen openstaande deadlines 🎉
+                </p>
+                {% endif %}
+            </div>
+
+            <!-- Quick add hint -->
+            <div class="card-sf p-3 text-center">
+                <i class="bi bi-lightbulb" style="color:var(--accent); font-size:1.5rem;"></i>
+                <p class="mt-2 mb-2" style="font-size:0.82rem; color:var(--text-muted);">
+                    Voeg een nieuwe taak toe met een deadline en prioriteit.
+                </p>
+                <a href="{{ url_for('add_task') }}" class="btn btn-accent w-100">
+                    <i class="bi bi-plus-lg me-1"></i> Taak toevoegen
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}Registreren – StudyFlow{% endblock %}
+
+{% block extra_style %}
+.auth-wrapper {
+    min-height: calc(100vh - 130px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+.auth-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 420px;
+}
+.auth-title { font-size: 1.75rem; margin-bottom: 0.25rem; }
+.divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+.strength-bar {
+    height: 4px;
+    border-radius: 4px;
+    background: var(--border);
+    margin-top: 6px;
+    overflow: hidden;
+}
+.strength-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s, background 0.3s;
+    width: 0%;
+}
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="text-center mb-4">
+            <span style="font-family:'DM Serif Display',serif; font-size:1.3rem; color:var(--accent);">Study<span style="color:var(--text-main)">Flow</span></span>
+            <h1 class="auth-title mt-2">Account aanmaken</h1>
+            <p style="color:var(--text-muted); font-size:0.875rem;">Gratis, voor altijd</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('register') }}" novalidate>
+            
+
+            <div class="mb-3">
+                <label class="form-label-sf">Gebruikersnaam</label>
+                <input type="text" name="username" class="form-control form-control-sf"
+                       placeholder="kies een gebruikersnaam" required autofocus
+                       value="{{ request.form.get('username', '') }}">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label-sf">E-mailadres</label>
+                <input type="email" name="email" class="form-control form-control-sf"
+                       placeholder="naam@school.nl" required
+                       value="{{ request.form.get('email', '') }}">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label-sf">Wachtwoord</label>
+                <div class="position-relative">
+                    <input type="password" name="password" id="passwordField"
+                           class="form-control form-control-sf"
+                           placeholder="minimaal 6 tekens" required
+                           oninput="checkStrength(this.value)">
+                    <button type="button" onclick="togglePassword()"
+                            style="position:absolute; right:12px; top:50%; transform:translateY(-50%);
+                                   background:none; border:none; color:var(--text-muted); cursor:pointer; padding:0;">
+                        <i class="bi bi-eye" id="eyeIcon"></i>
+                    </button>
+                </div>
+                <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+                <div style="font-size:0.73rem; color:var(--text-muted); margin-top:3px;" id="strengthLabel"></div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label-sf">Wachtwoord bevestigen</label>
+                <input type="password" name="confirm_password"
+                       class="form-control form-control-sf"
+                       placeholder="herhaal wachtwoord" required>
+            </div>
+
+            <button type="submit" class="btn btn-accent w-100 py-2" style="font-size:0.95rem;">
+                Account aanmaken
+            </button>
+        </form>
+
+        <div style="height:1px; background:var(--border); margin: 1.5rem 0;"></div>
+
+        <p class="text-center mb-0" style="font-size:0.875rem; color:var(--text-muted);">
+            Al een account?
+            <a href="{{ url_for('login') }}" style="color:var(--accent); text-decoration:none; font-weight:500;">
+                Inloggen
+            </a>
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function togglePassword() {
+    const field = document.getElementById('passwordField');
+    const icon  = document.getElementById('eyeIcon');
+    field.type  = field.type === 'password' ? 'text' : 'password';
+    icon.className = field.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';
+}
+
+function checkStrength(val) {
+    const fill  = document.getElementById('strengthFill');
+    const label = document.getElementById('strengthLabel');
+    let score = 0;
+    if (val.length >= 6)  score++;
+    if (val.length >= 10) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^a-zA-Z0-9]/.test(val)) score++;
+
+    const levels = [
+        { pct: '0%',   color: 'transparent', text: '' },
+        { pct: '25%',  color: '#e05c5c', text: 'Zwak' },
+        { pct: '50%',  color: '#f5a623', text: 'Redelijk' },
+        { pct: '75%',  color: '#4ecb8d', text: 'Goed' },
+        { pct: '100%', color: '#4ecb8d', text: 'Sterk 💪' },
+    ];
+    const lvl = levels[Math.min(score, 4)];
+    fill.style.width      = lvl.pct;
+    fill.style.background = lvl.color;
+    label.textContent     = lvl.text;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block title %}Taak toevoegen – StudyFlow{% endblock %}
+
+{% block extra_style %}
+.add-wrapper {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 2rem 1rem 3rem;
+}
+.add-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+}
+.section-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+/* Priority selector */
+.priority-group {
+    display: flex;
+    gap: 0.5rem;
+}
+.priority-btn {
+    flex: 1;
+    text-align: center;
+    padding: 0.6rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.priority-btn:hover { border-color: #3a3f5a; color: var(--text-main); }
+input[name="priority"]:checked + .priority-btn[for="prio-high"]   { border-color: var(--danger);  color: var(--danger);  background: #e05c5c11; }
+input[name="priority"]:checked + .priority-btn[for="prio-medium"] { border-color: var(--warning); color: var(--warning); background: #f5a62311; }
+input[name="priority"]:checked + .priority-btn[for="prio-low"]    { border-color: var(--success); color: var(--success); background: #4ecb8d11; }
+/* simpler approach with JS */
+.priority-btn.selected-high   { border-color: var(--danger);  color: var(--danger);  background: #e05c5c11; }
+.priority-btn.selected-medium { border-color: var(--warning); color: var(--warning); background: #f5a62311; }
+.priority-btn.selected-low    { border-color: var(--success); color: var(--success); background: #4ecb8d11; }
+{% endblock %}
+
+{% block content %}
+<div class="add-wrapper">
+
+    <!-- Back link -->
+    <a href="{{ url_for('index') }}" class="d-inline-flex align-items-center gap-1 mb-3"
+       style="color:var(--text-muted); font-size:0.875rem; text-decoration:none;">
+        <i class="bi bi-arrow-left"></i> Terug naar taken
+    </a>
+
+    <h1 class="mb-1" style="font-size:1.75rem;">Nieuwe taak</h1>
+    <p class="mb-4" style="color:var(--text-muted); font-size:0.875rem;">
+        Vul de details in en voeg de taak toe aan je lijst.
+    </p>
+
+    <div class="add-card">
+        <form method="POST" action="{{ url_for('add_task') }}" novalidate>
+            
+
+            <!-- ── Basics ── -->
+            <div class="section-label"><i class="bi bi-pencil"></i> Basis</div>
+
+            <div class="mb-3">
+                <label class="form-label-sf">Taaknaam *</label>
+                <input type="text" name="title" class="form-control form-control-sf"
+                       placeholder="bijv. Hoofdstuk 4 samenvatten" required autofocus
+                       value="{{ request.form.get('title', '') }}">
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label-sf">Omschrijving <span style="color:var(--text-muted); font-weight:400; text-transform:none; letter-spacing:0;">(optioneel)</span></label>
+                <textarea name="description" class="form-control form-control-sf"
+                          rows="3" placeholder="Extra uitleg, links, notities...">{{ request.form.get('description', '') }}</textarea>
+            </div>
+
+            <!-- ── Planning ── -->
+            <div class="section-label mt-2"><i class="bi bi-calendar3"></i> Planning</div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-sm-6">
+                    <label class="form-label-sf">Deadline</label>
+                    <input type="date" name="deadline" class="form-control form-control-sf"
+                           value="{{ request.form.get('deadline', '') }}"
+                           min="{{ today.strftime('%Y-%m-%d') }}">
+                </div>
+                <div class="col-sm-6">
+                    <label class="form-label-sf">Vak / Onderwerp</label>
+                    <input type="text" name="subject" class="form-control form-control-sf"
+                           placeholder="bijv. Wiskunde"
+                           value="{{ request.form.get('subject', '') }}">
+                </div>
+            </div>
+
+            <!-- ── Prioriteit ── -->
+            <div class="section-label mt-2"><i class="bi bi-flag"></i> Prioriteit</div>
+
+            <!-- Hidden radio input + visual buttons -->
+            <div class="priority-group mb-4" id="priorityGroup">
+                <button type="button" class="priority-btn" data-value="high"
+                        onclick="selectPriority('high')">
+                    <i class="bi bi-arrow-up-circle d-block mb-1" style="font-size:1.1rem;"></i>
+                    Hoog
+                </button>
+                <button type="button" class="priority-btn selected-medium" data-value="medium"
+                        onclick="selectPriority('medium')">
+                    <i class="bi bi-dash-circle d-block mb-1" style="font-size:1.1rem;"></i>
+                    Gemiddeld
+                </button>
+                <button type="button" class="priority-btn" data-value="low"
+                        onclick="selectPriority('low')">
+                    <i class="bi bi-arrow-down-circle d-block mb-1" style="font-size:1.1rem;"></i>
+                    Laag
+                </button>
+            </div>
+            <input type="hidden" name="priority" id="priorityInput" value="medium">
+
+            <!-- ── Submit ── -->
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-accent flex-grow-1 py-2">
+                    <i class="bi bi-plus-lg me-1"></i> Taak toevoegen
+                </button>
+                <a href="{{ url_for('index') }}" class="btn btn-outline-sf py-2 px-3">
+                    Annuleren
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function selectPriority(value) {
+    document.getElementById('priorityInput').value = value;
+    document.querySelectorAll('.priority-btn').forEach(btn => {
+        // Remove all selected classes
+        btn.classList.remove('selected-high', 'selected-medium', 'selected-low');
+        if (btn.dataset.value === value) {
+            btn.classList.add(`selected-${value}`);
+        }
+    });
+}
+</script>
+{% endblock %}
