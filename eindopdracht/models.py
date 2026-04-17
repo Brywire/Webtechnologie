@@ -4,6 +4,22 @@ from flask_login import UserMixin
 
 from extensions import db
 
+task_dependency = db.Table(
+    "task_dependency",
+    db.Column(
+        "prerequisite_id",
+        db.Integer,
+        db.ForeignKey("task.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    db.Column(
+        "dependent_id",
+        db.Integer,
+        db.ForeignKey("task.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+)
+
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -23,3 +39,11 @@ class Task(db.Model):
     done = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
+    prerequisites = db.relationship(
+        "Task",
+        secondary=task_dependency,
+        primaryjoin=(id == task_dependency.c.dependent_id),
+        secondaryjoin=(id == task_dependency.c.prerequisite_id),
+        backref=db.backref("dependents", lazy="select"),
+    )

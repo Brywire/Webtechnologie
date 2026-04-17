@@ -5,6 +5,12 @@ import task_views
 
 ROUTES = [
     ("/", "index", page_views.index, ["GET"]),
+    (
+        "/api/tasks/topological-order",
+        "tasks_topological_order_json",
+        page_views.tasks_topological_order_json,
+        ["GET"],
+    ),
     ("/register", "register", auth_views.register, ["GET", "POST"]),
     ("/login", "login", auth_views.login, ["GET", "POST"]),
     ("/logout", "logout", auth_views.logout, ["GET"]),

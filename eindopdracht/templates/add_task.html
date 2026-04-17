@@ -129,6 +129,18 @@ input[name="priority"]:checked + .priority-btn[for="prio-low"]    { border-color
             </div>
             <input type="hidden" name="priority" id="priorityInput" value="medium">
 
+            {% if other_tasks %}
+            <div class="section-label mt-2"><i class="bi bi-diagram-3"></i> Afhankelijkheden</div>
+            <p class="mb-2" style="font-size:0.82rem; color:var(--text-muted);">
+                Optioneel: houd Ctrl ingedrukt om meerdere taken te kiezen die eerst af moeten zijn.
+            </p>
+            <select name="prerequisite_ids" class="form-select form-control-sf mb-4" multiple size="5">
+                {% for o in other_tasks %}
+                <option value="{{ o.id }}">{{ o.title }}</option>
+                {% endfor %}
+            </select>
+            {% endif %}
+
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-accent flex-grow-1 py-2">
                     <i class="bi bi-plus-lg me-1"></i> Taak toevoegen

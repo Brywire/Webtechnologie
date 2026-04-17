@@ -144,14 +144,29 @@
                 <div class="stat-pill"><span>{{ stats.open }}</span> open</div>
             </div>
 
-            <div class="d-flex gap-2 mb-3 flex-wrap">
-                <a href="?filter=all"    class="filter-tab {% if filter == 'all' or not filter %}active{% endif %}">Alles</a>
-                <a href="?filter=open"   class="filter-tab {% if filter == 'open' %}active{% endif %}">Open</a>
-                <a href="?filter=done"   class="filter-tab {% if filter == 'done' %}active{% endif %}">Afgerond</a>
-                <a href="?filter=urgent" class="filter-tab {% if filter == 'urgent' %}active{% endif %}">
+            <div class="d-flex gap-2 mb-2 flex-wrap">
+                <a href="?filter=all&sort={{ sort }}"    class="filter-tab {% if filter == 'all' or not filter %}active{% endif %}">Alles</a>
+                <a href="?filter=open&sort={{ sort }}"   class="filter-tab {% if filter == 'open' %}active{% endif %}">Open</a>
+                <a href="?filter=done&sort={{ sort }}"   class="filter-tab {% if filter == 'done' %}active{% endif %}">Afgerond</a>
+                <a href="?filter=urgent&sort={{ sort }}" class="filter-tab {% if filter == 'urgent' %}active{% endif %}">
                     <i class="bi bi-exclamation-circle me-1"></i>Urgent
                 </a>
             </div>
+
+            <div class="d-flex gap-2 mb-3 flex-wrap align-items-center">
+                <span class="task-meta text-nowrap me-1">Sorteer:</span>
+                <a href="?filter={{ filter }}&sort=deadline" class="filter-tab {% if sort == 'deadline' %}active{% endif %}">Deadline</a>
+                <a href="?filter={{ filter }}&sort=topological" class="filter-tab {% if sort == 'topological' %}active{% endif %}">
+                    <i class="bi bi-diagram-3 me-1"></i>Topologisch
+                </a>
+            </div>
+
+            {% if topo_has_cycle %}
+            <div class="alert alert-warning py-2 px-3 mb-3" style="font-size:0.85rem;">
+                <i class="bi bi-exclamation-triangle me-1"></i>
+                Je afhankelijkheden bevatten een cyclus; topologische sortering is dan niet eenduidig.
+            </div>
+            {% endif %}
 
             <div class="d-flex flex-column gap-2">
                 {% if tasks %}
@@ -170,6 +185,14 @@
                                 <div class="task-title">{{ task.title }}</div>
                                 {% if task.description %}
                                 <div class="task-meta mt-1">{{ task.description }}</div>
+                                {% endif %}
+                                {% if task.prerequisites %}
+                                <div class="task-meta mt-1">
+                                    <i class="bi bi-link-45deg me-1"></i>Eerst:
+                                    {% for p in task.prerequisites %}
+                                    {{ p.title }}{% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                </div>
                                 {% endif %}
 
                                 <div class="d-flex align-items-center gap-2 mt-2 flex-wrap">
@@ -243,6 +266,24 @@
         </div>
 
         <div class="col-lg-4">
+            <div class="announcement-card mb-3">
+                <h6 class="mb-3" style="font-size:1rem; color:var(--text-main);">
+                    <i class="bi bi-diagram-3 me-2"></i>Topologische volgorde
+                </h6>
+                {% if tasks_topo_order %}
+                <ol class="mb-0 ps-3" style="font-size:0.85rem;">
+                    {% for t in tasks_topo_order[:10] %}
+                    <li class="mb-1">{{ t.title }}</li>
+                    {% endfor %}
+                </ol>
+                <a href="{{ url_for('tasks_topological_order_json') }}" class="d-inline-block mt-2 task-meta" target="_blank" rel="noopener">
+                    Volgorde als JSON
+                </a>
+                {% else %}
+                <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">Geen taken.</p>
+                {% endif %}
+            </div>
+
             <div class="announcement-card mb-3">
                 <h6 class="mb-3" style="font-size:1rem; color:var(--text-main);">
                     <i class="bi bi-bell me-2"></i>Aankomende deadlines

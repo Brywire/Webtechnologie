@@ -1,14 +1,16 @@
 from datetime import date
 
-from flask import render_template, request
+from flask import jsonify, render_template, request
 from flask_login import current_user, login_required
 
 from models import Task
+from task_ordering import topological_sort_tasks
 
 
 @login_required
 def index():
     filter_param = request.args.get("filter", "all")
+    sort_param = request.args.get("sort", "deadline")
     today = date.today()
 
     query = Task.query.filter_by(user_id=current_user.id)
@@ -25,6 +27,10 @@ def index():
         )
 
     tasks = query.order_by(Task.deadline.asc().nullslast(), Task.created_at.desc()).all()
+    tasks_topo, topo_has_cycle = topological_sort_tasks(tasks)
+    if sort_param == "topological":
+        tasks = tasks_topo
+
     all_tasks = Task.query.filter_by(user_id=current_user.id).all()
     stats = {
         "total": len(all_tasks),
@@ -32,7 +38,28 @@ def index():
         "open": sum(1 for task in all_tasks if not task.done),
     }
 
-    return render_template("index.html", tasks=tasks, today=today, filter=filter_param, stats=stats)
+    return render_template(
+        "index.html",
+        tasks=tasks,
+        tasks_topo_order=tasks_topo,
+        topo_has_cycle=topo_has_cycle,
+        today=today,
+        filter=filter_param,
+        sort=sort_param,
+        stats=stats,
+    )
+
+
+@login_required
+def tasks_topological_order_json():
+    tasks = Task.query.filter_by(user_id=current_user.id).all()
+    ordered, has_cycle = topological_sort_tasks(tasks)
+    return jsonify(
+        {
+            "order": [{"id": t.id, "title": t.title, "done": t.done} for t in ordered],
+            "has_cycle": has_cycle,
+        }
+    )
 
 
 @login_required
