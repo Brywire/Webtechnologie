@@ -10,14 +10,14 @@
 .add-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 20px;
+    border-radius: 12px;
     padding: 2rem;
 }
 .section-label {
-    font-size: 0.72rem;
+    font-size: 0.82rem;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    text-transform: none;
+    letter-spacing: 0;
     color: var(--text-muted);
     margin-bottom: 0.75rem;
     display: flex;
@@ -38,7 +38,7 @@
     flex: 1;
     text-align: center;
     padding: 0.6rem;
-    border-radius: 10px;
+    border-radius: 8px;
     border: 1px solid var(--border);
     background: transparent;
     color: var(--text-muted);
@@ -47,7 +47,7 @@
     cursor: pointer;
     transition: all 0.2s;
 }
-.priority-btn:hover { border-color: #3a3f5a; color: var(--text-main); }
+.priority-btn:hover { border-color: #cbd5e1; color: var(--text-main); }
 .priority-btn.selected-high   { border-color: var(--danger);  color: var(--danger);  background: #e05c5c11; }
 .priority-btn.selected-medium { border-color: var(--warning); color: var(--warning); background: #f5a62311; }
 .priority-btn.selected-low    { border-color: var(--success); color: var(--success); background: #4ecb8d11; }
@@ -69,7 +69,6 @@
     <div class="add-card">
         <form method="POST" action="{{ url_for('edit_task', task_id=task.id) }}" novalidate>
 
-            <!-- ── Basics ── -->
             <div class="section-label"><i class="bi bi-pencil"></i> Basis</div>
 
             <div class="mb-3">
@@ -85,7 +84,6 @@
                           rows="3" placeholder="Extra uitleg, links, notities...">{{ task.description }}</textarea>
             </div>
 
-            <!-- ── Planning ── -->
             <div class="section-label mt-2"><i class="bi bi-calendar3"></i> Planning</div>
 
             <div class="row g-3 mb-4">
@@ -102,7 +100,6 @@
                 </div>
             </div>
 
-            <!-- ── Prioriteit ── -->
             <div class="section-label mt-2"><i class="bi bi-flag"></i> Prioriteit</div>
 
             <div class="priority-group mb-4" id="priorityGroup">
@@ -124,7 +121,6 @@
             </div>
             <input type="hidden" name="priority" id="priorityInput" value="{{ task.priority }}">
 
-            <!-- ── Submit ── -->
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-accent flex-grow-1 py-2">
                     <i class="bi bi-check-lg me-1"></i> Opslaan
