@@ -16,25 +16,28 @@
 body {
     background-color: var(--page-bg);
     color: var(--text-main);
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
     font-weight: 400;
     min-height: 100vh;
 }
 
 h1, h2, h3, .brand {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-weight: 650;
+    letter-spacing: -0.015em;
 }
 
 .navbar {
     background-color: var(--card-bg);
     border-bottom: 1px solid var(--border);
-    padding: 0.85rem 0;
+    padding: 0.75rem 0;
 }
 .navbar-brand {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.5rem;
-    color: var(--accent) !important;
-    letter-spacing: -0.5px;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-size: 1.15rem;
+    color: var(--text-main) !important;
+    font-weight: 650;
+    letter-spacing: -0.01em;
 }
 .navbar-brand span {
     color: var(--text-main);
@@ -42,7 +45,7 @@ h1, h2, h3, .brand {
 .nav-link {
     color: var(--text-soft) !important;
     font-weight: 500;
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     transition: color 0.2s;
 }
 .nav-link:hover, .nav-link.active {
@@ -50,14 +53,14 @@ h1, h2, h3, .brand {
 }
 .btn-nav-accent {
     background-color: var(--accent);
-    color: #0f1117 !important;
+    color: #ffffff !important;
     font-weight: 600;
     border-radius: 8px;
-    padding: 0.35rem 1rem;
-    font-size: 0.875rem;
-    transition: opacity 0.2s;
+    padding: 0.38rem 0.95rem;
+    font-size: 0.86rem;
+    transition: background-color 0.2s;
 }
-.btn-nav-accent:hover { opacity: 0.85; }
+.btn-nav-accent:hover { background-color: #1d4ed8; }
 
 .flash-container {
     position: fixed;
@@ -91,7 +94,7 @@ h1, h2, h3, .brand {
 
 .btn-accent {
     background-color: var(--accent);
-    color: #0f1117;
+    color: #ffffff;
     font-weight: 600;
     border: none;
     border-radius: 6px;
@@ -107,8 +110,9 @@ h1, h2, h3, .brand {
     transition: all 0.2s;
 }
 .btn-outline-sf:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+    border-color: #cbd5e1;
+    color: var(--text-main);
+    background: #f8fafc;
 }
 
 .form-control-sf, .form-select-sf {

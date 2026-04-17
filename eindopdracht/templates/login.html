@@ -12,7 +12,7 @@
 .auth-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 20px;
+    border-radius: 12px;
     padding: 2.5rem 2rem;
     width: 100%;
     max-width: 420px;
@@ -32,15 +32,12 @@
 <div class="auth-wrapper">
     <div class="auth-card">
         <div class="text-center mb-4">
-            <span style="font-family:'DM Serif Display',serif; font-size:1.3rem; color:var(--accent);">Study<span style="color:var(--text-main)">Flow</span></span>
+            <span style="font-size:1.05rem; font-weight:600; color:var(--text-main);">StudyFlow</span>
             <h1 class="auth-title mt-2">Welkom terug</h1>
             <p style="color:var(--text-muted); font-size:0.875rem;">Log in op je account</p>
         </div>
 
         <form method="POST" action="{{ url_for('login') }}" novalidate>
-            <!-- CSRF token (Flask-WTF) -->
-            
-
             <div class="mb-3">
                 <label class="form-label-sf">Gebruikersnaam</label>
                 <input type="text" name="username" class="form-control form-control-sf"
