@@ -1,21 +1,20 @@
 :root {
-    --bg-dark: #f4f5f7;
-    --bg-card: #ffffff;
-    --bg-card2: #f8f9fb;
-    --accent: #2563eb;
-    --accent-soft: #2563eb1a;
-    --text-main: #1f2937;
-    --text-muted: #6b7280;
-    --border: #e5e7eb;
-    --danger: #dc2626;
-    --success: #16a34a;
-    --warning: #d97706;
+    --page-bg:          #0f1117;
+    --card-bg:          #1a1d27;
+    --card-bg-light:    #21253a;
+    --accent:           #d9882a;
+    --text-main:        #e8e9f0;
+    --text-soft:        #7a7f99;
+    --border:           #2e3247;
+    --danger:           #e05c5c;
+    --success:          #4ecb8d;
+    --warning:          #d9882a;
 }
 
 * { box-sizing: border-box; }
 
 body {
-    background-color: var(--bg-dark);
+    background-color: var(--page-bg);
     color: var(--text-main);
     font-family: 'Inter', 'Segoe UI', sans-serif;
     font-weight: 400;
@@ -29,7 +28,7 @@ h1, h2, h3, .brand {
 }
 
 .navbar {
-    background-color: #ffffff;
+    background-color: var(--card-bg);
     border-bottom: 1px solid var(--border);
     padding: 0.75rem 0;
 }
@@ -44,7 +43,7 @@ h1, h2, h3, .brand {
     color: var(--text-main);
 }
 .nav-link {
-    color: var(--text-muted) !important;
+    color: var(--text-soft) !important;
     font-weight: 500;
     font-size: 0.92rem;
     transition: color 0.2s;
@@ -71,10 +70,10 @@ h1, h2, h3, .brand {
     width: 320px;
 }
 .flash-msg {
-    background: var(--bg-card2);
+    background: var(--card-bg-light);
     border: 1px solid var(--border);
     border-left: 4px solid var(--accent);
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 0.85rem 1rem;
     margin-bottom: 0.5rem;
     font-size: 0.875rem;
@@ -88,10 +87,9 @@ h1, h2, h3, .brand {
 }
 
 .card-sf {
-    background: var(--bg-card);
+    background: var(--card-bg);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    box-shadow: 0 1px 1px rgba(15, 23, 42, 0.03);
+    border-radius: 8px;
 }
 
 .btn-accent {
@@ -99,16 +97,16 @@ h1, h2, h3, .brand {
     color: #ffffff;
     font-weight: 600;
     border: none;
-    border-radius: 8px;
-    transition: background-color 0.2s, transform 0.1s;
+    border-radius: 6px;
+    transition: opacity 0.2s, transform 0.1s;
 }
-.btn-accent:hover { background-color: #1d4ed8; transform: translateY(-1px); color: #ffffff; }
+.btn-accent:hover { background-color: #c47820; color: #0f1117; }
 
 .btn-outline-sf {
     border: 1px solid var(--border);
-    color: var(--text-muted);
+    color: var(--text-soft);
     background: transparent;
-    border-radius: 8px;
+    border-radius: 6px;
     transition: all 0.2s;
 }
 .btn-outline-sf:hover {
@@ -118,36 +116,34 @@ h1, h2, h3, .brand {
 }
 
 .form-control-sf, .form-select-sf {
-    background-color: var(--bg-card2);
+    background-color: var(--card-bg-light);
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 6px;
     color: var(--text-main);
     padding: 0.65rem 1rem;
     font-size: 0.9rem;
     transition: border-color 0.2s;
 }
-.form-control-sf::placeholder { color: var(--text-muted); }
+.form-control-sf::placeholder { color: var(--text-soft); }
 .form-control-sf:focus, .form-select-sf:focus {
-    background-color: var(--bg-card2);
+    background-color: var(--card-bg-light);
     border-color: var(--accent);
     color: var(--text-main);
-    box-shadow: 0 0 0 3px var(--accent-soft);
+    box-shadow: none;
     outline: none;
 }
-.form-select-sf option { background: var(--bg-card2); }
+.form-select-sf option { background: var(--card-bg-light); }
 
 .form-label-sf {
-    font-size: 0.82rem;
+    font-size: 0.875rem;
     font-weight: 600;
-    text-transform: none;
-    letter-spacing: 0;
-    color: var(--text-muted);
+    color: var(--text-soft);
     margin-bottom: 0.4rem;
 }
 
 footer {
     border-top: 1px solid var(--border);
-    color: var(--text-muted);
+    color: var(--text-soft);
     font-size: 0.8rem;
     padding: 1.25rem 0;
     margin-top: auto;
