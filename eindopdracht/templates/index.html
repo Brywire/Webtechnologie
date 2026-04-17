@@ -281,10 +281,7 @@
                     <li class="mb-1">{{ t.title }}</li>
                     {% endfor %}
                 </ol>
-                <a href="{{ url_for('tasks_topological_order_json') }}" class="d-inline-block mt-2 task-meta" target="_blank" rel="noopener">
-                    Volgorde als JSON
-                </a>
-                {% else %}
+{% else %}
                 <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">Geen taken.</p>
                 {% endif %}
             </div>
