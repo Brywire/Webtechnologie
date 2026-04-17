@@ -10,14 +10,14 @@
 .add-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 20px;
+    border-radius: 12px;
     padding: 2rem;
 }
 .section-label {
-    font-size: 0.72rem;
+    font-size: 0.82rem;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    text-transform: none;
+    letter-spacing: 0;
     color: var(--text-muted);
     margin-bottom: 0.75rem;
     display: flex;
@@ -40,7 +40,7 @@
     flex: 1;
     text-align: center;
     padding: 0.6rem;
-    border-radius: 10px;
+    border-radius: 8px;
     border: 1px solid var(--border);
     background: transparent;
     color: var(--text-muted);
@@ -49,11 +49,11 @@
     cursor: pointer;
     transition: all 0.2s;
 }
-.priority-btn:hover { border-color: #3a3f5a; color: var(--text-main); }
+.priority-btn:hover { border-color: #cbd5e1; color: var(--text-main); }
 input[name="priority"]:checked + .priority-btn[for="prio-high"]   { border-color: var(--danger);  color: var(--danger);  background: #e05c5c11; }
 input[name="priority"]:checked + .priority-btn[for="prio-medium"] { border-color: var(--warning); color: var(--warning); background: #f5a62311; }
 input[name="priority"]:checked + .priority-btn[for="prio-low"]    { border-color: var(--success); color: var(--success); background: #4ecb8d11; }
-/* simpler approach with JS */
+
 .priority-btn.selected-high   { border-color: var(--danger);  color: var(--danger);  background: #e05c5c11; }
 .priority-btn.selected-medium { border-color: var(--warning); color: var(--warning); background: #f5a62311; }
 .priority-btn.selected-low    { border-color: var(--success); color: var(--success); background: #4ecb8d11; }
@@ -62,7 +62,6 @@ input[name="priority"]:checked + .priority-btn[for="prio-low"]    { border-color
 {% block content %}
 <div class="add-wrapper">
 
-    <!-- Back link -->
     <a href="{{ url_for('index') }}" class="d-inline-flex align-items-center gap-1 mb-3"
        style="color:var(--text-muted); font-size:0.875rem; text-decoration:none;">
         <i class="bi bi-arrow-left"></i> Terug naar taken
@@ -77,7 +76,6 @@ input[name="priority"]:checked + .priority-btn[for="prio-low"]    { border-color
         <form method="POST" action="{{ url_for('add_task') }}" novalidate>
             
 
-            <!-- ── Basics ── -->
             <div class="section-label"><i class="bi bi-pencil"></i> Basis</div>
 
             <div class="mb-3">
@@ -93,7 +91,6 @@ input[name="priority"]:checked + .priority-btn[for="prio-low"]    { border-color
                           rows="3" placeholder="Extra uitleg, links, notities...">{{ request.form.get('description', '') }}</textarea>
             </div>
 
-            <!-- ── Planning ── -->
             <div class="section-label mt-2"><i class="bi bi-calendar3"></i> Planning</div>
 
             <div class="row g-3 mb-4">
@@ -111,10 +108,8 @@ input[name="priority"]:checked + .priority-btn[for="prio-low"]    { border-color
                 </div>
             </div>
 
-            <!-- ── Prioriteit ── -->
             <div class="section-label mt-2"><i class="bi bi-flag"></i> Prioriteit</div>
 
-            <!-- Hidden radio input + visual buttons -->
             <div class="priority-group mb-4" id="priorityGroup">
                 <button type="button" class="priority-btn" data-value="high"
                         onclick="selectPriority('high')">
@@ -134,7 +129,6 @@ input[name="priority"]:checked + .priority-btn[for="prio-low"]    { border-color
             </div>
             <input type="hidden" name="priority" id="priorityInput" value="medium">
 
-            <!-- ── Submit ── -->
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-accent flex-grow-1 py-2">
                     <i class="bi bi-plus-lg me-1"></i> Taak toevoegen

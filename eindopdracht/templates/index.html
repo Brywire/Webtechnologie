@@ -12,7 +12,7 @@
 .task-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 10px;
     padding: 1rem 1.2rem;
     transition: border-color 0.2s, transform 0.15s;
     position: relative;
@@ -63,7 +63,7 @@
 
 /* ── Sidebar announcement card ── */
 .announcement-card {
-    background: linear-gradient(135deg, #1a1d27 0%, #21253a 100%);
+    background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 14px;
     padding: 1.25rem;
@@ -87,7 +87,7 @@
 .stat-pill {
     background: var(--bg-card2);
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 8px;
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
     color: var(--text-muted);
@@ -107,7 +107,7 @@
     background: transparent;
     border: 1px solid var(--border);
     color: var(--text-muted);
-    border-radius: 8px;
+    border-radius: 7px;
     padding: 0.3rem 0.85rem;
     font-size: 0.8rem;
     font-weight: 500;
@@ -116,7 +116,7 @@
     text-decoration: none;
 }
 .filter-tab:hover, .filter-tab.active {
-    background: var(--accent-soft);
+    background: #eff6ff;
     border-color: var(--accent);
     color: var(--accent);
 }
@@ -125,7 +125,6 @@
 {% block content %}
 <div class="container py-4">
 
-    <!-- Page header -->
     <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
         <div>
             <h1 class="mb-0" style="font-size:1.8rem;">Mijn Taken</h1>
@@ -137,17 +136,14 @@
 
     <div class="row g-4">
 
-        <!-- ── Left: task list ── -->
         <div class="col-lg-8">
 
-            <!-- Stats -->
             <div class="d-flex gap-2 flex-wrap mb-3">
                 <div class="stat-pill"><span>{{ stats.total }}</span> totaal</div>
                 <div class="stat-pill"><span>{{ stats.done }}</span> afgerond</div>
                 <div class="stat-pill"><span>{{ stats.open }}</span> open</div>
             </div>
 
-            <!-- Filter tabs -->
             <div class="d-flex gap-2 mb-3 flex-wrap">
                 <a href="?filter=all"    class="filter-tab {% if filter == 'all' or not filter %}active{% endif %}">Alles</a>
                 <a href="?filter=open"   class="filter-tab {% if filter == 'open' %}active{% endif %}">Open</a>
@@ -157,7 +153,6 @@
                 </a>
             </div>
 
-            <!-- Task list -->
             <div class="d-flex flex-column gap-2">
                 {% if tasks %}
                     {% for task in tasks %}
@@ -165,7 +160,6 @@
                         <div class="task-priority-bar priority-{{ task.priority }}"></div>
 
                         <div class="d-flex align-items-start gap-3 ps-2">
-                            <!-- Checkbox → POST to toggle done -->
                             <form method="POST" action="{{ url_for('toggle_task', task_id=task.id) }}" class="mt-1">
                                 <input type="checkbox" class="task-check"
                                        onchange="this.form.submit()"
@@ -179,7 +173,6 @@
                                 {% endif %}
 
                                 <div class="d-flex align-items-center gap-2 mt-2 flex-wrap">
-                                    <!-- Deadline badge -->
                                     {% if task.deadline %}
                                         {% set days_left = (task.deadline - today).days %}
                                         {% if task.done %}
@@ -205,14 +198,12 @@
                                         {% endif %}
                                     {% endif %}
 
-                                    <!-- Vak -->
                                     {% if task.subject %}
                                     <span class="task-meta">
                                         <i class="bi bi-book me-1"></i>{{ task.subject }}
                                     </span>
                                     {% endif %}
 
-                                    <!-- Prioriteit label -->
                                     <span class="task-meta">
                                         {% if task.priority == 'high' %}
                                         <i class="bi bi-arrow-up-circle me-1" style="color:var(--danger);"></i>Hoog
@@ -225,7 +216,6 @@
                                 </div>
                             </div>
 
-                            <!-- Edit + Delete buttons -->
                             <div class="d-flex gap-1">
                                 <a href="{{ url_for('edit_task', task_id=task.id) }}" class="btn btn-outline-sf btn-sm" style="padding:0.3rem 0.6rem;">
                                     <i class="bi bi-pencil" style="font-size:0.8rem;"></i>
@@ -252,10 +242,9 @@
             </div>
         </div>
 
-        <!-- ── Right: announcements / upcoming ── -->
         <div class="col-lg-4">
             <div class="announcement-card mb-3">
-                <h6 class="mb-3" style="font-family:'DM Serif Display',serif; font-size:1rem; color:var(--accent);">
+                <h6 class="mb-3" style="font-size:1rem; color:var(--text-main);">
                     <i class="bi bi-bell me-2"></i>Aankomende deadlines
                 </h6>
 
@@ -288,12 +277,11 @@
                     {% endfor %}
                 {% else %}
                 <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">
-                    Geen openstaande deadlines 🎉
+                    Geen openstaande deadlines
                 </p>
                 {% endif %}
             </div>
 
-            <!-- Quick add hint -->
             <div class="card-sf p-3 text-center">
                 <i class="bi bi-lightbulb" style="color:var(--accent); font-size:1.5rem;"></i>
                 <p class="mt-2 mb-2" style="font-size:0.82rem; color:var(--text-muted);">
