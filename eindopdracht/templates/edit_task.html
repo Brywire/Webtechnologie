@@ -121,6 +121,18 @@
             </div>
             <input type="hidden" name="priority" id="priorityInput" value="{{ task.priority }}">
 
+            {% if other_tasks %}
+            <div class="section-label mt-2"><i class="bi bi-diagram-3"></i> Afhankelijkheden</div>
+            <p class="mb-2" style="font-size:0.82rem; color:var(--text-muted);">
+                Taken die eerst af moeten zijn voordat je deze taak kunt afronden (Ctrl+klik voor meerdere).
+            </p>
+            <select name="prerequisite_ids" class="form-select form-control-sf mb-4" multiple size="5">
+                {% for o in other_tasks %}
+                <option value="{{ o.id }}" {% if o.id in selected_prereq_ids %}selected{% endif %}>{{ o.title }}</option>
+                {% endfor %}
+            </select>
+            {% endif %}
+
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-accent flex-grow-1 py-2">
                     <i class="bi bi-check-lg me-1"></i> Opslaan
