@@ -115,10 +115,15 @@
     transition: all 0.2s;
     text-decoration: none;
 }
-.filter-tab:hover, .filter-tab.active {
-    background: #eff6ff;
+.filter-tab:hover {
+    background: #fdf0dc;
     border-color: var(--accent);
     color: var(--accent);
+}
+.filter-tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
 }
 {% endblock %}
 

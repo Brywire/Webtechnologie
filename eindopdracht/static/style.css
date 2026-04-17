@@ -94,13 +94,13 @@ h1, h2, h3, .brand {
 
 .btn-accent {
     background-color: var(--accent);
-    color: #ffffff;
+    color: #0f1117;
     font-weight: 600;
     border: none;
     border-radius: 6px;
     transition: opacity 0.2s, transform 0.1s;
 }
-.btn-accent:hover { background-color: #c47820; color: #0f1117; }
+.btn-accent:hover { background-color: #c47820; color: #ffffff; }
 
 .btn-outline-sf {
     border: 1px solid var(--border);
